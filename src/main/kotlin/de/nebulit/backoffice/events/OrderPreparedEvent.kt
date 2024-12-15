@@ -1,6 +1,8 @@
 package de.nebulit.backoffice.events
 
 import de.nebulit.backoffice.common.Event
+import de.nebulit.backoffice.cryptoshredding.EncryptedField
+import de.nebulit.backoffice.cryptoshredding.EncryptionKeyIdentifier
 import java.util.UUID
 
 /*
@@ -13,9 +15,12 @@ data class OrderPreparedEvent(
     var street: String,
     var totalPrice: Double,
     var zipCode: String,
+    @EncryptedField
     var name: String,
+    @EncryptedField
     var surname: String,
+    @EncryptionKeyIdentifier
+    var customerId: UUID,
     var orderedProducts: List<UUID>,
     var orderId: UUID,
-    var customerId: UUID
 ) : Event
