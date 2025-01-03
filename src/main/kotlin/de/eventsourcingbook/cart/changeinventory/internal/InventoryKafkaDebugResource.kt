@@ -2,6 +2,7 @@ package de.eventsourcingbook.cart.changeinventory.internal
 
 import mu.KotlinLogging
 import org.springframework.kafka.core.KafkaTemplate
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -14,6 +15,7 @@ class InventoryKafkaDebugResource(
 ) {
     var logger = KotlinLogging.logger {}
 
+    @Transactional
     @CrossOrigin
     @PostMapping("/debug/external/changeinventory")
     fun processDebugCommand(

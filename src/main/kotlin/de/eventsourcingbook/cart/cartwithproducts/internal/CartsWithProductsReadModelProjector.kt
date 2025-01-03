@@ -24,24 +24,28 @@ class CartsWithProductsReadModelProjector(
 ) {
     @EventHandler
     fun on(event: CartClearedEvent) {
+        Thread.sleep(5000)
         // throws exception if not available (adjust logic)
         this.repository.deleteAllByAggregateId(event.aggregateId)
     }
 
     @EventHandler
     fun on(event: ItemRemovedEvent) {
+        Thread.sleep(5000)
         // throws exception if not available (adjust logic)
         this.repository.deleteById(CartProduct(event.aggregateId, event.itemId))
     }
 
     @EventHandler
     fun on(event: ItemArchivedEvent) {
+        Thread.sleep(5000)
         // throws exception if not available (adjust logic)
         this.repository.deleteById(CartProduct(event.aggregateId, event.itemId))
     }
 
     @EventHandler
     fun on(event: ItemAddedEvent) {
+        Thread.sleep(5000)
         // throws exception if not available (adjust logic)
         repository.save(
             CartsWithProductsReadModelEntity().apply {

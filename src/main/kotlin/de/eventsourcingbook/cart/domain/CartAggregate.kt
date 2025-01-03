@@ -2,6 +2,7 @@ package de.eventsourcingbook.cart.domain
 
 import de.eventsourcingbook.cart.application.DeviceFingerPrintCalculator
 import de.eventsourcingbook.cart.common.CommandException
+import de.eventsourcingbook.cart.common.CommandResult
 import de.eventsourcingbook.cart.domain.commands.additem.AddItemCommand
 import de.eventsourcingbook.cart.domain.commands.archiveitem.ArchiveItemCommand
 import de.eventsourcingbook.cart.domain.commands.clearcart.ClearCartCommand
@@ -23,7 +24,8 @@ typealias ProductId = UUID
 
 @Aggregate
 class CartAggregate {
-    @AggregateIdentifier var aggregateId: UUID? = null
+    @AggregateIdentifier
+    var aggregateId: UUID? = null
 
     val cartItems = mutableMapOf<CartItemId, ProductId>()
     var productPrice = mutableMapOf<ProductId, Double>()
@@ -37,7 +39,7 @@ class CartAggregate {
     fun handle(
         command: AddItemCommand,
         fingerPrintCalculator: DeviceFingerPrintCalculator,
-    ) {
+    ): CommandResult {
         if (aggregateId == null) {
             AggregateLifecycle.apply(CartCreatedEvent(aggregateId = command.aggregateId))
         }
@@ -55,6 +57,7 @@ class CartAggregate {
                 deviceFingerPrint = fingerPrintCalculator.calculateDeviceFingerPrint(),
             ),
         )
+        return CommandResult(command.aggregateId, AggregateLifecycle.getVersion())
     }
 
     @EventSourcingHandler
@@ -71,11 +74,12 @@ class CartAggregate {
     // Remove Item
 
     @CommandHandler
-    fun handle(command: RemoveItemCommand) {
+    fun handle(command: RemoveItemCommand): CommandResult {
         if (!this.cartItems.contains(command.itemId)) {
             throw CommandException("Item ${command.itemId} not in the Cart")
         }
         AggregateLifecycle.apply(ItemRemovedEvent(command.aggregateId, command.itemId))
+        return CommandResult(command.aggregateId, AggregateLifecycle.getVersion())
     }
 
     @EventSourcingHandler
@@ -87,8 +91,9 @@ class CartAggregate {
     // Clear Cart
 
     @CommandHandler
-    fun handle(command: ClearCartCommand) {
+    fun handle(command: ClearCartCommand): CommandResult {
         AggregateLifecycle.apply(CartClearedEvent(command.aggregateId))
+        return CommandResult(command.aggregateId, AggregateLifecycle.getVersion())
     }
 
     @EventSourcingHandler
@@ -98,10 +103,11 @@ class CartAggregate {
     }
 
     @CommandHandler
-    fun handle(command: ArchiveItemCommand) {
+    fun handle(command: ArchiveItemCommand): CommandResult {
         cartItems.entries
             .find { it.value == command.productId }
             ?.let { AggregateLifecycle.apply(ItemArchivedEvent(command.aggregateId, it.key)) }
+        return CommandResult(command.aggregateId, AggregateLifecycle.getVersion())
     }
 
     @EventSourcingHandler
@@ -112,7 +118,7 @@ class CartAggregate {
 
     // submit cart
     @CommandHandler
-    fun handle(command: SubmitCartCommand) {
+    fun handle(command: SubmitCartCommand): CommandResult {
         if (cartItems.isEmpty()) {
             throw CommandException("cannot submit empty cart")
         }
@@ -126,6 +132,7 @@ class CartAggregate {
                 cartItems.map { productPrice[it.value]!! }.sumOf { it },
             ),
         )
+        return CommandResult(command.aggregateId, AggregateLifecycle.getVersion())
     }
 
     @EventSourcingHandler
