@@ -1,4 +1,4 @@
-package de.eventsourcingbook.cart.support.internal.projection
+package de.eventsourcingbook.cart.support.projection
 
 import reactor.core.publisher.Mono
 import reactor.util.retry.Retry

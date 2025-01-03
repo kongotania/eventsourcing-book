@@ -3,39 +3,32 @@ import {removeItem} from "@/app/components/removeItem/removeItem";
 
 export const Inventories = (props: { productId: string }) => {
 
-    const [inventory, setInventory] = useState<{ inventory:number }>({inventory: 0})
-    const [expectedVersion, setExpectedVersion] = useState(-1)
-
-    const fetchInventories = async () => {
-        let response = await fetch(`/inventories/${props.productId}?expectedVersion=${expectedVersion??-1}`)
-        let invntories = await response.json()
-        setInventory(invntories.data)
-    }
+    const [inventory, setInventory] = useState()
 
     useEffect(() => {
-        let ref =setInterval(async ()=>{
-            let version = await fetch(`/inventories/${props.productId}/version`)
-            let sequence = await version.json()
-            setExpectedVersion(sequence.sequenceNumber)
-        }, 5000)
-        return ()=>{clearInterval(ref)}
+        const eventSource = new EventSource(`/inventories/sse/${props.productId}`, {
+        });
+        eventSource.onmessage = (event) => {
+            let payload = JSON.parse(event.data)
+            if (payload.data !== "heartbeat") {
+                setInventory(payload.data.inventory)
+            }
+        };
+
+        return () => {
+            alert("close")
+                eventSource.close();
+            }
     }, []);
 
-    useEffect(() => {
-        fetchInventories()
-    }, [expectedVersion]);
 
     return <div>
         <div className="columns is-vcentered">
             <div className="column">
                         <div className="tag is-warning is-flex is-align-items-center">
-                           Available: {inventory.inventory}
+                           Available: {inventory}
                         </div>
             </div>
-            <div className={"column"} onClick={() => fetchInventories()}>
-                <i className="fa-solid fa-arrows-rotate"></i>
-            </div>
-
         </div>
     </div>
 }
