@@ -1,5 +1,6 @@
 package de.eventsourcingbook.cart.domain
 
+import de.eventsourcingbook.cart.common.CommandResult
 import de.eventsourcingbook.cart.domain.commands.changeinventory.ChangeInventoryCommand
 import de.eventsourcingbook.cart.events.InventoryChangedEvent
 import org.axonframework.commandhandling.CommandHandler
@@ -13,13 +14,13 @@ import java.util.UUID
 
 @Aggregate
 class InventoryAggregate {
-
     @AggregateIdentifier lateinit var aggregateId: UUID
 
     @CreationPolicy(AggregateCreationPolicy.CREATE_IF_MISSING)
     @CommandHandler
-    fun handle(command: ChangeInventoryCommand) {
+    fun handle(command: ChangeInventoryCommand): CommandResult {
         AggregateLifecycle.apply(InventoryChangedEvent(command.productId, command.inventory))
+        return CommandResult(command.productId, AggregateLifecycle.getVersion())
     }
 
     @EventSourcingHandler

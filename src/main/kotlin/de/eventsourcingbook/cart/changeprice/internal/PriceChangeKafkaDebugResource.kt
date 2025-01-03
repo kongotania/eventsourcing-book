@@ -2,6 +2,7 @@ package de.eventsourcingbook.cart.changeprice.internal
 
 import mu.KotlinLogging
 import org.springframework.kafka.core.KafkaTemplate
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -15,6 +16,7 @@ class PriceChangeKafkaDebugResource(
 ) {
     var logger = KotlinLogging.logger {}
 
+    @Transactional
     @CrossOrigin
     @PostMapping("/debug/external/changeprice")
     fun processDebugCommand(
@@ -22,6 +24,6 @@ class PriceChangeKafkaDebugResource(
         @RequestParam price: BigDecimal,
         @RequestParam oldPrice: BigDecimal,
     ) {
-        kafkaTemplate.send("inventories", ExternalPriceChangedEvent(productId, price, oldPrice))
+        kafkaTemplate.send("price_changes", ExternalPriceChangedEvent(productId, price, oldPrice))
     }
 }
