@@ -39,11 +39,15 @@ You need to have Docker installed.
 
 Here are the simple steps to start the application in a development environment.
 
-install IntelliJ IDEA
-Install the most recent Java SDK (File -> Project -> SDK)
-In the terminal type 'mvn clean install', this will do a full maven install of all the dependencies. You can do the same in IntelliJ as well.
-Ensure you have docker running (if you don't already have it installed on your machine, you need it for testcontainers to work. on Windows just install the docker desktop app).
-Build the app
+- install IntelliJ IDEA
+
+- Install the most recent Java SDK (File -> Project -> SDK)
+
+- In the terminal type 'mvn clean install', this will do a full maven install of all the dependencies. You can do the same in IntelliJ as well.
+
+- Ensure you have docker running (if you don't already have it installed on your machine, you need it for testcontainers to work. on Windows just install the docker desktop app).
+
+- Build the app
 
 Start the app by right-cicking on the ["ApplicationStarter"](https://github.com/dilgerma/eventsourcing-book/blob/main/src/test/kotlin/de/eventsourcingbook/cart/ApplicationStarter.kt) in src/test/kotlin and klick run.
 This will start the whole application including all dependencies.
