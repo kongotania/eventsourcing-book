@@ -51,3 +51,10 @@ Here are the simple steps to start the application in a development environment.
 
 Start the app by right-cicking on the ["ApplicationStarter"](https://github.com/dilgerma/eventsourcing-book/blob/main/src/test/kotlin/de/eventsourcingbook/cart/ApplicationStarter.kt) in src/test/kotlin and klick run.
 This will start the whole application including all dependencies.
+
+### Code Generation
+
+The source code in the book was mostly generated directly from the Event Model. If you want to see this process in action, I can highly 
+recommend this E-Mail Course that spans 8 days currently and guides you through the process of creating your own custom Code Generator.
+
+[E-Mail Course](https://newsletter.nebulit.de/generator)
