@@ -15,7 +15,7 @@
     <properties>
         <java.version>19</java.version>
         <kotlin.version>2.0.0</kotlin.version>
-        <axon.version>4.9.3</axon.version>
+        <axon.version>4.10.3</axon.version>
     </properties>
     <dependencies>
         <!-- Spring Boot Dependencies -->
@@ -49,12 +49,10 @@
         <dependency>
             <groupId>org.axonframework</groupId>
             <artifactId>axon-spring-boot-starter</artifactId>
-            <version>${axon.version}</version>
         </dependency>
         <dependency>
             <groupId>org.axonframework</groupId>
             <artifactId>axon-test</artifactId>
-            <version>${axon.version}</version>
         </dependency>
 
         <!-- Kotlin and Logging Dependencies -->
@@ -206,6 +204,8 @@
                 <groupId>org.axonframework</groupId>
                 <artifactId>axon-bom</artifactId>
                 <version>${axon.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
             </dependency>
         </dependencies>
     </dependencyManagement>
